@@ -17,5 +17,11 @@ async function getRandomQuestion(){
     return result.rows[randomIndex];
 }
 
+async function getQuestionById(id){
+    const result = await pool.query('SELECT * FROM questions WHERE id = $1', [id]);
 
-export {getQuestionsByTopic, getRandomQuestion};
+    return result.rows[0];
+}
+
+
+export {getQuestionsByTopic, getRandomQuestion, getQuestionById};

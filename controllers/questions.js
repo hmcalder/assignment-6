@@ -1,5 +1,6 @@
 import { getTopicByName } from "../models/topics.js";
-import { getQuestionsByTopic, getRandomQuestion } from "../models/questions.js";
+import { getQuestionsByTopic, getRandomQuestion, getQuestionById } from "../models/questions.js";
+
 
 async function listQuestionsByTopic(req, res) {
     const topicName = req.params.topic;
@@ -43,4 +44,29 @@ async function randomQuestion(req, res){
     });
 }
 
-export {listQuestionsByTopic, randomQuestion};
+async function checkAnswer(req, res){
+    const id = req.body.id;
+    const guess = req.body.guess;
+
+
+    //if bad request 
+    if(!id || !guess){
+        return res.status(400).json({error: 'Missing required parameter'});
+    }
+
+    const question = await getQuestionById(id);
+    //if now answer 
+    if(!question){
+        return res.status(404).json({error: 'Question was not found'});
+    }
+
+    //compare the users guess with the actual answer 
+    const isCorrect = guess.trim().toLowerCase() === question.answer.trim().toLowerCase();
+
+    res.json({
+        correct: isCorrect,
+        answer:question.answer
+    });
+}
+
+export {listQuestionsByTopic, randomQuestion, checkAnswer};
