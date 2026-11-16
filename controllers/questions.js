@@ -1,5 +1,5 @@
 import { getTopicByName } from "../models/topics.js";
-import { getQuestionsByTopic, getRandomQuestion, getQuestionById } from "../models/questions.js";
+import { getQuestionsByTopic, getRandomQuestion, getQuestionById, addQuestion } from "../models/questions.js";
 
 
 async function listQuestionsByTopic(req, res) {
@@ -69,4 +69,24 @@ async function checkAnswer(req, res){
     });
 }
 
-export {listQuestionsByTopic, randomQuestion, checkAnswer};
+async function addNewQuestion(req, res){
+    const { topic, question, answer, difficulty } = req.body;
+
+    //if one is missing 
+    if(!topic || !question || !answer || !difficulty){
+        return res.status(400).json({error: "Missing one of the parameters"});
+    }
+
+    //if medium, easy, or hard isn't put for difficulty 
+    if(difficulty !== "easy" && difficulty !== "medium" && difficulty !== "hard"){
+        return res.status(400).json({error: "Invalid difficulty"});
+    }
+
+    const questions = await addQuestion(topic, question, answer, difficulty);
+
+
+    //tells that a new resource was created
+    res.status(201).json(questions);
+}
+
+export {listQuestionsByTopic, randomQuestion, checkAnswer, addNewQuestion};

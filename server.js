@@ -11,6 +11,7 @@ app.use('/triviabook/topics',topicsRouter);
 app.use('/triviabook/topic', questionsRouter);
 app.use('/triviabook/random', questionsRouter);
 app.use('/triviabook/answer', questionsRouter);
+app.use('/triviabook/question', questionsRouter);
 
 app.get('/', (req, res) => {
     res.send('Hello, Express')
