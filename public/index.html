@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+
+<!--
+
+Name: Hailey Thompson 
+Date: November 16, 2026
+CSC 372
+
+This page is the front end for the Triviabook application. 
+Users can answer questions as well as add questions. 
+
+-->
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="script.js" defer></script>
+    <title>Triviabook</title>
+</head>
+
+<body>
+
+    <header>
+        <h1>Triviabook</h1>
+        <p>Fun questions to test your knowledge!</p>
+    </header>
+
+    <main> 
+        <section id="trivia-topics">
+            <h2>Browse Trivia Topics</h2>
+            <p>Choose a topic to explore trivia questions!</p>
+    
+            <button id="load-topics">Show Topics </button>
+    
+            <ul id="topics-list"></ul>
+        </section>
+
+        <section id="trivia-questions">
+            <h2>Trivia Questions</h2>
+            <p>Select a topic you want to answer questions in!</p>
+
+            <ul id="questions-list"> </ul>
+        </section>
+
+        <section id="answer-section">
+            <h2>Check your Answer</h2>
+            <p>Enter your answer to a trivia question!</p>
+            <p id="selected-question">No question selected.</p>
+
+            <form id="answer-form">
+                <label>
+                    Your Answer:
+                    <input type="text" id="answer-input" required>
+                </label>
+
+                <button type="submit">Check your Answer</button>
+
+            </form>
+            <p id="answer-result"></p>
+        </section>
+    </main>
+    
+</body>
+</html>
