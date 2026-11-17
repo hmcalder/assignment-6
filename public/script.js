@@ -9,22 +9,26 @@ This includes, retrieving topics and displaying trivia questions.
 
 */
 
-import { checkAnswer } from "../controllers/questions";
+
 
 //DOM selections
 let topicsButton = document.querySelector("#load-topics");
 let topicsList = document.querySelector("#topics-list");
 let questionsList = document.querySelector("#questions-list");
-let selectQuestion = document.querySelector("#selected-question");
+let selectedQuestion = document.querySelector("#selected-question");
 let answerForm = document.querySelector("#answer-form");
 let answerInput = document.querySelector("#answer-input");
 let answerResult = document.querySelector("#answer-result");
+let randomButton = document.querySelector("#get-random-question");
+let randomQuestionText = document.querySelector("#random-question-text");
 
 //stores question id selected by the user 
 let selectedQuestionId = null;
 
+//event listeners
 topicsButton.addEventListener("click", loadTopics);
 answerForm.addEventListener("submit", checkAnswer);
+randomButton.addEventListener("click", loadRandomQuestion);
 
 /* gets the questions from the express API */
 async function loadTopics() {
@@ -99,7 +103,7 @@ async function loadQuestions(topicName) {
 
             item.appendChild(questionButton);
             questionsList.appendChild(item);
-            
+
         }
     }
     catch (error) {
@@ -109,9 +113,75 @@ async function loadQuestions(topicName) {
 }
 
 //handles the submission of a trivia answer
-async function checkAnswer(event){
+async function checkAnswer(event) {
     event.preventDefault();
+
+    let guess = answerInput.value.trim();
+
+    //see if the user selected a question
+    if (selectedQuestionId === null) {
+        answerResult.textContent = "Please first select a question!";
+        return;
+    }
+    try {
+        //post request 
+        let response = await fetch("/triviabook/answer", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                id: selectedQuestionId,
+                guess: guess
+            })
+        });
+
+        //checking to see if it loaded and worked 
+        if (!response.ok) {
+            throw new Error("Failed to check the answer.");
+        }
+
+        let result = await response.json();
+
+        //displaying whether the answer was guessed correctly 
+        if (result.correct) {
+            answerResult.textContent = "Correct! The answer is " + result.answer;
+        }
+        else {
+            answerResult.textContent = "Incorrect! Looks like you need to study... The correct answer is " + result.answer;
+        }
+    }
+    catch(error){
+        answerResult.textContent = "Unable to check answer.";
+        console.error(error);
+    }
 }
+
+//retrieves and displays a random question 
+async function loadRandomQuestion(){
+    try{
+        let response = await fetch("/triviabook/random");
+
+        //checking the response
+        if(!response.ok) {
+            throw new Error("Failed to load your random question.");
+        }
+
+        let question = await response.json();
+
+        randomQuestionText.textContent = question.question;
+        selectedQuestionId = question.id;
+        selectedQuestion.textContent = question.question;
+
+        //clear old results 
+        answerResult.textContent = "";
+    }
+    catch(error) {
+        randomQuestionText.textContent = "Unable to load the random questions...";
+        console.error(error);
+    }
+}
+
 
 
 
