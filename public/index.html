@@ -15,6 +15,7 @@ Users can answer questions as well as add questions.
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="script.js" defer></script>
+    <link rel="stylesheet" href="style.css">
     <title>Triviabook</title>
 </head>
 
@@ -66,6 +67,43 @@ Users can answer questions as well as add questions.
             <button id="get-random-question">Get a Random Question</button>
 
             <p id="random-question-text"></p>
+        </section>
+
+        <section id="add-question-section">
+            <h2>Add a Trivia Question</h2>
+            <p>Create your own questions to answer!</p>
+
+            <form id="add-question-form">
+                <label>
+                    Topic:
+                    <input type="text" id="new-topic" required>
+                </label>
+
+                <label>
+                    Question:
+                    <input type="text" id="new-question" required>
+                </label>
+
+                <label>
+                    Answer:
+                    <input type="text" id="new-answer" required>
+                </label>
+
+                <label>
+                    Difficulty:
+                    <select id="new-difficulty" required>
+                        <option value="easy">Easy</option>
+                        <option value="medium">Medium</option>
+                        <option value="hard">Hard</option>
+                    </select>
+                </label>
+
+                <button type="submit">Add your Question</button>
+
+
+            </form>
+
+            <p id="add-question-result"></p>
         </section>
     </main>
     

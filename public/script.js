@@ -21,6 +21,12 @@ let answerInput = document.querySelector("#answer-input");
 let answerResult = document.querySelector("#answer-result");
 let randomButton = document.querySelector("#get-random-question");
 let randomQuestionText = document.querySelector("#random-question-text");
+let addQuestionForm = document.querySelector("#add-question-form");
+let newTopic = document.querySelector("#new-topic");
+let newQuestion = document.querySelector("#new-question");
+let newAnswer = document.querySelector("#new-answer");
+let newDifficulty = document.querySelector("#new-difficulty");
+let addQuestionResult = document.querySelector("#add-question-result");
 
 //stores question id selected by the user 
 let selectedQuestionId = null;
@@ -29,6 +35,7 @@ let selectedQuestionId = null;
 topicsButton.addEventListener("click", loadTopics);
 answerForm.addEventListener("submit", checkAnswer);
 randomButton.addEventListener("click", loadRandomQuestion);
+addQuestionForm.addEventListener("submit", addNewQuestion);
 
 /* gets the questions from the express API */
 async function loadTopics() {
@@ -178,6 +185,43 @@ async function loadRandomQuestion(){
     }
     catch(error) {
         randomQuestionText.textContent = "Unable to load the random questions...";
+        console.error(error);
+    }
+}
+
+async function addNewQuestion(event) {
+    event.preventDefault();
+
+    let topic = newTopic.value.trim(); 
+    let question = newQuestion.value.trim();
+    let answer = newAnswer.value.trim();
+    let difficulty = newDifficulty.value;
+
+    try{
+        let response = await fetch("/triviabook/question/add", {
+            method: "POST",
+            headers: { 
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                topic: topic,
+                question: question,
+                answer: answer,
+                difficulty: difficulty
+            })
+        });
+
+        if(!response.ok){
+            throw new Error("Could not add the question.");
+        }
+
+        let result = await response.json();
+
+        //put message onto the screen
+        addQuestionResult.textContent = "Your question was successfully added!";
+    }
+    catch(error){
+        addQuestionResult.textContent = "Question was not able to be added...";
         console.error(error);
     }
 }
